@@ -1,0 +1,5 @@
+import Link from "next/link";
+import type { Order } from "@/types/commerce";
+import { CommerceBadge } from "./badge";
+import { commerceDate,commerceMoney,orderLabels,paymentLabels } from "./commerce-format";
+export function OrderCard({order}:{order:Order}){return <article className="rounded-card border bg-card p-5"><div className="flex items-start justify-between gap-3"><div><p className="text-xs text-muted">{commerceDate(order.placed_at||order.created_at)}</p><h2 className="mt-1 text-lg font-bold">{order.order_no}</h2></div><strong className="text-primary">{commerceMoney(order.grand_total,order.currency)}</strong></div><div className="mt-5 flex flex-wrap gap-2"><CommerceBadge tone={order.status==="cancelled"?"danger":order.status==="delivered"?"success":"info"}>{orderLabels[order.status]||order.status}</CommerceBadge><CommerceBadge tone={order.payment_status==="paid"?"success":order.payment_status==="failed"?"danger":"neutral"}>{paymentLabels[order.payment_status]||order.payment_status}</CommerceBadge></div><Link href={`/orders/${order.id}`} className="mt-5 inline-flex text-sm font-semibold text-primary">Sipariş detayı →</Link></article>}

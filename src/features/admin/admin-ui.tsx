@@ -1,0 +1,5 @@
+import { EmptyState,Feedback,LoadingState } from "@/features/appointments/feedback";
+export {EmptyState,Feedback,LoadingState};
+export function AdminHeader({title,description,action}:{title:string;description:string;action?:React.ReactNode}){return <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-[11px] font-semibold uppercase tracking-[.16em] text-primary">Yönetim</p><h1 className="mt-1 text-2xl font-bold sm:text-3xl">{title}</h1><p className="mt-1.5 text-sm text-muted">{description}</p></div>{action}</div>}
+export function AdminPanel({children,className=""}:{children:React.ReactNode;className?:string}){return <section className={`rounded-2xl border bg-card p-4 shadow-[0_8px_24px_rgba(75,48,38,.035)] sm:p-5 ${className}`}>{children}</section>}
+export function Value({value}:{value:unknown}){if(typeof value==="boolean"||value===0||value===1)return <span>{value?"Evet":"Hayır"}</span>;return <span>{value===null||value===undefined||value===""?"—":String(value)}</span>}

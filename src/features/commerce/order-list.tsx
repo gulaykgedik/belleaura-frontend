@@ -1,0 +1,11 @@
+"use client";
+import Link from "next/link";
+import { useEffect,useState } from "react";
+import { Button } from "@/components/ui/button";
+import { commerceService } from "@/services/commerce-service";
+import { ApiError } from "@/types/api";
+import type { Order } from "@/types/commerce";
+import type { PaginationMeta } from "@/types/appointment";
+import { EmptyState,Feedback,LoadingState } from "@/features/appointments/feedback";
+import { OrderCard } from "./order-card";
+export function OrderList(){const[orders,setOrders]=useState<Order[]>([]);const[meta,setMeta]=useState<PaginationMeta|null>(null);const[page,setPage]=useState(1);const[loading,setLoading]=useState(true);const[error,setError]=useState("");useEffect(()=>{let active=true;commerceService.orders(page).then((result)=>{if(active){setOrders(result.items);setMeta(result.meta);}}).catch((reason)=>{if(active)setError(reason instanceof ApiError?reason.message:"Siparişler yüklenemedi.");}).finally(()=>{if(active)setLoading(false);});return()=>{active=false;};},[page]);function move(value:number){setLoading(true);setError("");setPage(value);}return <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8"><div><p className="text-sm font-semibold text-primary">Hesabım</p><h1 className="mt-1 text-3xl font-bold">Siparişlerim</h1></div><div className="mt-8">{error?<Feedback>{error}</Feedback>:loading?<LoadingState label="Siparişler yükleniyor…"/>:orders.length?<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{orders.map((order)=><OrderCard key={order.id} order={order}/>)}</div>:<EmptyState title="Henüz siparişiniz yok" description="Ürünleri keşfederek ilk siparişinizi oluşturabilirsiniz." action={<Link href="/products" className="inline-flex rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">Ürünlere git</Link>}/>}</div>{meta&&meta.last_page>1?<div className="mt-8 flex justify-center gap-3"><Button variant="ghost" disabled={loading||page<=1} onClick={()=>move(page-1)}>← Önceki</Button><span className="self-center text-sm text-muted">{meta.page} / {meta.last_page}</span><Button variant="ghost" disabled={loading||page>=meta.last_page} onClick={()=>move(page+1)}>Sonraki →</Button></div>:null}</div>}

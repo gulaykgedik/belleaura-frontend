@@ -1,0 +1,251 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #525866;
+  --primary-foreground: #ffffff;
+  --secondary: #eef0f3;
+  --secondary-foreground: #343841;
+  --background: #f6f7f9;
+  --foreground: #20232a;
+  --card: #ffffff;
+  --card-foreground: #20232a;
+  --muted: #707581;
+  --muted-surface: #f0f1f4;
+  --border: #dfe2e7;
+  --danger: #c73a51;
+  --radius: 1.125rem;
+}
+
+.customer-site {
+  --primary: #8f6657;
+  --primary-foreground: #fffdf9;
+  --secondary: #e8cfc2;
+  --secondary-foreground: #5f4035;
+  --background: #faf7f2;
+  --foreground: #2c2926;
+  --card: #fffdf9;
+  --card-foreground: #2c2926;
+  --muted: #77706a;
+  --muted-surface: #f3e8df;
+  --border: #e7ded6;
+  --danger: #a74848;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.customer-site h1,
+.customer-site h2,
+.customer-site h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+}
+
+/* Admin is deliberately scoped so its theme never changes the customer site. */
+.admin-shell {
+  --primary: #8f6657;
+  --primary-foreground: #fffdf9;
+  --secondary: #ead8ce;
+  --secondary-foreground: #5f4035;
+  --background: #f6f0ea;
+  --foreground: #302925;
+  --card: #fffdf9;
+  --card-foreground: #302925;
+  --muted: #7b706a;
+  --muted-surface: #f1e7df;
+  --border: #e4d7ce;
+  --danger: #a75252;
+  --admin-sidebar: #efe2d9;
+  color: var(--foreground);
+  background: var(--background);
+}
+.admin-shell.admin-dark {
+  --primary: #d8aa96;
+  --primary-foreground: #2d211c;
+  --secondary: #5b4035;
+  --secondary-foreground: #fff5ee;
+  --background: #2b2421;
+  --foreground: #f7eee8;
+  --card: #382e2a;
+  --card-foreground: #f7eee8;
+  --muted: #c0afa6;
+  --muted-surface: #443631;
+  --border: #59463e;
+  --danger: #e29591;
+  --admin-sidebar: #241e1b;
+}
+.admin-shell.admin-light {
+  --admin-scrollbar-thumb: rgb(143 102 87 / .14);
+  --admin-scrollbar-thumb-hover: rgb(143 102 87 / .52);
+}
+.admin-shell.admin-dark {
+  --admin-scrollbar-thumb: rgb(151 128 117 / .16);
+  --admin-scrollbar-thumb-hover: rgb(184 154 140 / .52);
+}
+.admin-shell .admin-sidebar-nav {
+  overscroll-behavior: contain;
+  scrollbar-color: var(--admin-scrollbar-thumb) transparent;
+  scrollbar-width: thin;
+}
+.admin-shell aside:hover .admin-sidebar-nav {
+  scrollbar-color: var(--admin-scrollbar-thumb-hover) transparent;
+}
+.admin-shell .admin-sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+.admin-shell .admin-sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+.admin-shell .admin-sidebar-nav::-webkit-scrollbar-thumb {
+  background-color: var(--admin-scrollbar-thumb);
+  border-radius: 999px;
+}
+.admin-shell aside:hover .admin-sidebar-nav::-webkit-scrollbar-thumb,
+.admin-shell .admin-sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background-color: var(--admin-scrollbar-thumb-hover);
+}
+@media (max-width: 1023px) {
+  .admin-shell .admin-sidebar-nav::-webkit-scrollbar { width: 5px; }
+}
+.admin-shell,
+.admin-shell * { transition-property: background-color, border-color, color, opacity, transform; transition-duration: 220ms; }
+.admin-shell main input,
+.admin-shell main select,
+.admin-shell main textarea { color: var(--foreground); background-color: var(--card); }
+.admin-shell main input::placeholder,
+.admin-shell main textarea::placeholder { color: var(--muted); opacity: .8; }
+.admin-shell main input:disabled,
+.admin-shell main select:disabled,
+.admin-shell main textarea:disabled { cursor: not-allowed; opacity: .55; background: var(--muted-surface); }
+.admin-shell main table thead { background: var(--muted-surface); }
+.admin-shell main table tbody tr:nth-child(even) { background: color-mix(in srgb, var(--muted-surface) 35%, transparent); }
+.admin-shell main table tbody tr:hover { background: color-mix(in srgb, var(--secondary) 45%, transparent); }
+.admin-shell main table th { font-weight: 700; letter-spacing: .045em; }
+.admin-shell main table td,
+.admin-shell main table th { border-color: var(--border); }
+.admin-shell [role="dialog"] > div { background: var(--card); color: var(--foreground); box-shadow: 0 24px 70px rgb(31 20 15 / .28); }
+.admin-dark .text-amber-700 { color: #f0ca91; }
+.admin-dark .text-blue-700 { color: #c9bab0; }
+.admin-dark .text-emerald-700 { color: #b8d0b5; }
+.admin-dark .text-rose-700 { color: #e7aaa7; }
+.admin-dark .text-zinc-700 { color: #c7bbb4; }
+
+/* Customer layout density tokens: public surfaces stay centered and compact. */
+.customer-site .max-w-7xl { max-width: 75rem; }
+.customer-site [class~="max-w-[1280px]"] { max-width: 75rem; }
+.customer-site [class~="max-w-[1240px]"] { max-width: 73.75rem; }
+.customer-site [class~="max-w-[1200px]"] { max-width: 72.5rem; }
+.customer-site article { min-width: 0; width: 100%; }
+.customer-site .p-10 { padding: 2rem; }
+.customer-site .p-9 { padding: 1.75rem; }
+.customer-site .p-8 { padding: 1.5rem; }
+.customer-site .p-7 { padding: 1.375rem; }
+.customer-site .p-6 { padding: 1.25rem; }
+.customer-site .gap-10 { gap: 2rem; }
+.customer-site .gap-8 { gap: 1.5rem; }
+.customer-site .gap-7 { gap: 1.25rem; }
+.customer-site .gap-6 { gap: 1.25rem; }
+.customer-site article [class~="aspect-[4/5]"] { aspect-ratio: 5 / 6; }
+.customer-site section[aria-label="Lotus Güzellik öne çıkanlar"] {
+  width: calc(100% - 2rem);
+  max-width: 73.75rem;
+}
+
+@media (max-width: 767px) {
+  .customer-site .max-w-7xl,
+  .customer-site [class~="max-w-[1280px]"],
+  .customer-site [class~="max-w-[1240px]"],
+  .customer-site [class~="max-w-[1200px]"] {
+    width: calc(100% - 1.75rem);
+  }
+  .customer-site section[aria-label="Lotus Güzellik öne çıkanlar"] { width: calc(100% - 2rem); }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .customer-site .max-w-7xl,
+  .customer-site [class~="max-w-[1280px]"],
+  .customer-site [class~="max-w-[1240px]"],
+  .customer-site [class~="max-w-[1200px]"] {
+    width: calc(100% - 2.5rem);
+  }
+}
+
+/* Public section rhythm: trims the combined gap without touching card internals. */
+.customer-site main { --customer-section-trim: 0.375rem; }
+.customer-site main :is(section, section > *)[class~="py-10"] { padding-block: max(2rem, calc(2.5rem - var(--customer-section-trim))); }
+.customer-site main :is(section, section > *)[class~="py-12"] { padding-block: max(2rem, calc(3rem - var(--customer-section-trim))); }
+.customer-site main :is(section, section > *)[class~="py-14"] { padding-block: max(2rem, calc(3.5rem - var(--customer-section-trim))); }
+.customer-site main :is(section, section > *)[class~="py-16"] { padding-block: max(2rem, calc(4rem - var(--customer-section-trim))); }
+.customer-site main :is(section, section > *)[class~="py-20"] { padding-block: max(2rem, calc(5rem - var(--customer-section-trim))); }
+.customer-site main :is(section, section > *)[class~="py-24"] { padding-block: max(2rem, calc(6rem - var(--customer-section-trim))); }
+.customer-site main :is(section, section > *)[class~="py-28"] { padding-block: max(2rem, calc(7rem - var(--customer-section-trim))); }
+
+@media (min-width: 640px) {
+  .customer-site main { --customer-section-trim: 0.5rem; }
+  .customer-site main :is(section, section > *)[class~="sm:py-14"] { padding-block: max(2rem, calc(3.5rem - var(--customer-section-trim))); }
+  .customer-site main :is(section, section > *)[class~="sm:py-16"] { padding-block: max(2rem, calc(4rem - var(--customer-section-trim))); }
+  .customer-site main :is(section, section > *)[class~="sm:py-20"] { padding-block: max(2rem, calc(5rem - var(--customer-section-trim))); }
+  .customer-site main :is(section, section > *)[class~="sm:py-24"] { padding-block: max(2rem, calc(6rem - var(--customer-section-trim))); }
+}
+
+@media (min-width: 1024px) {
+  .customer-site main { --customer-section-trim: 0.625rem; }
+  .customer-site main :is(section, section > *)[class~="lg:py-16"] { padding-block: max(2rem, calc(4rem - var(--customer-section-trim))); }
+  .customer-site main :is(section, section > *)[class~="lg:py-20"] { padding-block: max(2rem, calc(5rem - var(--customer-section-trim))); }
+  .customer-site main :is(section, section > *)[class~="lg:py-24"] { padding-block: max(2rem, calc(6rem - var(--customer-section-trim))); }
+  .customer-site main :is(section, section > *)[class~="lg:py-28"] { padding-block: max(2rem, calc(7rem - var(--customer-section-trim))); }
+  .customer-site main :is(section, section > *)[class~="lg:py-32"] { padding-block: max(2rem, calc(8rem - var(--customer-section-trim))); }
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-surface: var(--muted-surface);
+  --color-border: var(--border);
+  --color-danger: var(--danger);
+  --radius-card: var(--radius);
+  --font-sans: var(--font-app);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #9b91ff;
+    --primary-foreground: #141127;
+    --secondary: #292645;
+    --secondary-foreground: #e9e7ff;
+    --background: #111115;
+    --foreground: #f4f4f7;
+    --card: #19191f;
+    --card-foreground: #f4f4f7;
+    --muted: #a6a6b2;
+    --muted-surface: #222229;
+    --border: #303039;
+    --danger: #ff8294;
+  }
+}
+
+* { border-color: var(--border); }
+html { scroll-behavior: smooth; }
+body {
+  --font-app: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-app);
+  text-rendering: optimizeLegibility;
+}
+button, a { -webkit-tap-highlight-color: transparent; }
+button, input, select, textarea { font: inherit; }
+button, a, input, select, textarea { outline-color: var(--primary); }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+::selection { background: var(--secondary); color: var(--secondary-foreground); }
+
+@media (prefers-reduced-motion: no-preference) {
+  a, button, input, select, textarea { transition-duration: 180ms; }
+}

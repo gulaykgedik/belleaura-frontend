@@ -1,0 +1,3 @@
+"use client";
+import { ResourceManager,type ResourceConfig } from "@/features/admin/resource-manager";
+const config:ResourceConfig={title:"Kategoriler",description:"Ürün kategorilerini ve sıralamalarını yönetin.",listPath:"/admin/categories",canCreate:true,canEdit:true,canDelete:true,defaults:{is_active:true,sort_order:0},fields:[{key:"name",label:"Kategori adı",required:true},{key:"slug",label:"Slug"},{key:"description",label:"Açıklama",type:"textarea"},{key:"sort_order",label:"Sıra",type:"number"},{key:"is_active",label:"Aktif",type:"checkbox"}],columns:[{key:"name",label:"Kategori"},{key:"slug",label:"Slug"},{key:"sort_order",label:"Sıra"},{key:"is_active",label:"Aktif"}]};export default function CategoriesPage(){return <ResourceManager config={config}/>}

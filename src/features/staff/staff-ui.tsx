@@ -1,0 +1,2 @@
+export function StaffHeader({title,description}:{title:string;description:string}){return <div><p className="text-xs font-semibold uppercase tracking-widest text-primary">Personel alanı</p><h1 className="mt-1 text-3xl font-bold">{title}</h1><p className="mt-2 text-sm text-muted">{description}</p></div>}
+export function StaffPanel({children,className=""}:{children:React.ReactNode;className?:string}){return <section className={`rounded-card border bg-card p-4 shadow-sm sm:p-5 ${className}`}>{children}</section>}
