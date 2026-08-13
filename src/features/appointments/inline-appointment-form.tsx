@@ -2,15 +2,20 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/use-auth";
 import { appointmentService } from "@/services/appointment-service";
 import { ApiError } from "@/types/api";
 import type { Appointment, ServiceItem, StaffItem } from "@/types/appointment";
 import { money, todayInIstanbul } from "./format";
 
 const categories = ["Tümü", "Saç Bakımı", "Cilt Bakımı", "Kaş & Kirpik", "El & Ayak Bakımı", "Özel Bakımlar"] as const;
+const draftKey = "home-appointment-draft";
 
 export function InlineAppointmentForm() {
+  const { user, isLoading:authLoading } = useAuth();
+  const router = useRouter();
   const [services, setServices] = useState<ServiceItem[]>([]), [staff, setStaff] = useState<StaffItem[]>([]), [slots, setSlots] = useState<string[]>([]);
   const [category, setCategory] = useState<(typeof categories)[number]>("Tümü"), [serviceId, setServiceId] = useState(""), [staffId, setStaffId] = useState(""), [date, setDate] = useState(""), [time, setTime] = useState(""), [timeOpen, setTimeOpen] = useState(false);
   const [loadingServices, setLoadingServices] = useState(true), [loadingStaff, setLoadingStaff] = useState(false), [loadingSlots, setLoadingSlots] = useState(false), [creating, setCreating] = useState(false);
@@ -19,6 +24,7 @@ export function InlineAppointmentForm() {
   const staffMember = staff.find(item => item.id === Number(staffId)) ?? null;
   const visibleServices = category === "Tümü" ? services : services.filter(item => categoryFor(item) === category);
 
+  useEffect(() => { try { const saved = sessionStorage.getItem(draftKey); if (!saved) return; const draft = JSON.parse(saved) as Partial<{category:(typeof categories)[number]; serviceId:string; staffId:string; date:string; time:string}>; if (draft.category && categories.includes(draft.category)) setCategory(draft.category); if (draft.serviceId) setServiceId(draft.serviceId); if (draft.staffId) setStaffId(draft.staffId); if (draft.date) setDate(draft.date); if (draft.time) setTime(draft.time); } catch { sessionStorage.removeItem(draftKey); } }, []);
   useEffect(() => { let active = true; appointmentService.services().then(result => active && setServices(result.items)).catch(reason => active && setError(message(reason, "Hizmetler yüklenemedi."))).finally(() => active && setLoadingServices(false)); return () => { active = false; }; }, []);
   useEffect(() => { if (!serviceId) return; let active = true; setLoadingStaff(true); appointmentService.staff(Number(serviceId)).then(items => active && setStaff(items)).catch(reason => active && setError(message(reason, "Uzmanlar yüklenemedi."))).finally(() => active && setLoadingStaff(false)); return () => { active = false; }; }, [serviceId]);
   useEffect(() => { if (!serviceId || !staffId || !date || dateError) return; let active = true; setLoadingSlots(true); appointmentService.availability(Number(serviceId), Number(staffId), date).then(result => active && setSlots(result.slots)).catch(reason => active && setError(message(reason, "Uygun saatler yüklenemedi."))).finally(() => active && setLoadingSlots(false)); return () => { active = false; }; }, [serviceId, staffId, date, dateError]);
@@ -29,7 +35,7 @@ export function InlineAppointmentForm() {
   function chooseStaff(value:string) { setStaffId(value); resetTime(); setError(""); }
   function chooseDate(value:string) { setDate(value); resetTime(); setError(""); setDateError(value && isPastLocalDate(value) ? "Geçmiş tarihler seçilemez." : ""); }
   function chooseTime(value:string) { setTime(value); setTimeOpen(false); }
-  async function create() { if (date && isPastLocalDate(date)) { setDateError("Geçmiş tarihler seçilemez."); return; } if (!service || !staffMember || !date || !time) return; setCreating(true); setError(""); try { setCreated(await appointmentService.create({ service_id:service.id, staff_id:staffMember.id, date, start_time:time })); } catch (reason) { setError(message(reason, "Randevu oluşturulamadı.")); } finally { setCreating(false); } }
+  async function create() { if (date && isPastLocalDate(date)) { setDateError("Geçmiş tarihler seçilemez."); return; } if (!service || !staffMember || !date || !time) return; if (!user) { sessionStorage.setItem(draftKey, JSON.stringify({ category, serviceId, staffId, date, time })); router.push("/login?next=%2F"); return; } setCreating(true); setError(""); try { setCreated(await appointmentService.create({ service_id:service.id, staff_id:staffMember.id, date, start_time:time })); sessionStorage.removeItem(draftKey); } catch (reason) { setError(message(reason, "Randevu oluşturulamadı.")); } finally { setCreating(false); } }
 
   if (created) return <div className="py-8 text-center"><span className="mx-auto grid size-14 place-items-center rounded-full bg-emerald-600 text-2xl text-white">✓</span><h3 className="mt-4 text-2xl">Randevunuz oluşturuldu</h3><p className="mt-2 text-sm text-muted">Referans numaranız <strong>{created.reference_no}</strong>.</p><div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row"><Link href={`/appointments/${created.id}`} className="rounded-full border px-5 py-3 text-sm font-semibold">Randevu detayı</Link><Link href="/appointments" className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">Randevularım</Link></div></div>;
 
@@ -46,7 +52,7 @@ export function InlineAppointmentForm() {
       <Field label="Saat"><TimePicker ready={!!serviceId && !!staffId && !!date && !dateError} loading={loadingSlots} slots={slots} value={time} open={timeOpen} toggle={() => setTimeOpen(value => !value)} select={chooseTime}/></Field>
       {error ? <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 sm:col-span-2">{error}</div> : null}
     </div>
-    <aside className="min-w-0 rounded-[1.4rem] border border-primary/15 bg-card/80 p-5 lg:sticky lg:top-32 lg:self-start"><p className="text-xs font-bold uppercase tracking-[.18em] text-primary">Randevu Özeti</p><dl className="mt-4 grid gap-3 text-sm"><Summary label="Şube" value="Lotus Merkez"/><Summary label="Hizmet" value={service?.name}/><Summary label="Uzman" value={staffMember?.name}/><Summary label="Tarih" value={date ? new Intl.DateTimeFormat("tr-TR", { dateStyle:"long" }).format(new Date(`${date}T12:00:00`)) : undefined}/><Summary label="Saat" value={time}/><Summary label="Süre" value={service ? `${service.duration_minutes} dakika` : "—"}/><Summary label="Tutar" value={service ? money(service.price) : "—"}/></dl><Button type="button" onClick={create} disabled={!complete || creating} className="mt-5 w-full">{creating ? "Randevu oluşturuluyor..." : "Randevuyu Onayla"}</Button></aside>
+    <aside className="min-w-0 rounded-[1.4rem] border border-primary/15 bg-card/80 p-5 lg:sticky lg:top-32 lg:self-start"><p className="text-xs font-bold uppercase tracking-[.18em] text-primary">Randevu Özeti</p><dl className="mt-4 grid gap-3 text-sm"><Summary label="Şube" value="Lotus Merkez"/><Summary label="Hizmet" value={service?.name}/><Summary label="Uzman" value={staffMember?.name}/><Summary label="Tarih" value={date ? new Intl.DateTimeFormat("tr-TR", { dateStyle:"long" }).format(new Date(`${date}T12:00:00`)) : undefined}/><Summary label="Saat" value={time}/><Summary label="Süre" value={service ? `${service.duration_minutes} dakika` : "—"}/><Summary label="Tutar" value={service ? money(service.price) : "—"}/></dl><Button type="button" onClick={create} disabled={!complete || creating || authLoading} className="mt-5 w-full">{creating ? "Randevu oluşturuluyor..." : "Randevuyu Onayla"}</Button></aside>
   </div>;
 }
 
