@@ -1,7 +1,21 @@
 "use client";
-import { useState } from "react";
 import { Reveal } from "@/components/ui/reveal";
 import { InlineAppointmentForm } from "@/features/appointments/inline-appointment-form";
 import { RoleGuard } from "@/features/auth/role-guard";
 
-export function AppointmentCta(){const[open,setOpen]=useState(false);return <section aria-labelledby="appointment-cta-title" className="mx-auto max-w-[1240px] px-4 pb-8 pt-6 sm:px-6 sm:pb-10 lg:px-0"><div className="overflow-hidden rounded-[1.75rem] border border-[#dfc4b8] bg-[#efd8cc] shadow-[0_16px_45px_rgba(91,64,53,.09)]"><div className="grid items-center gap-7 px-6 py-8 sm:px-9 lg:min-h-[190px] lg:grid-cols-[1fr_auto] lg:px-12 lg:py-7"><Reveal direction="left"><p className="text-xs font-bold uppercase tracking-[.22em] text-primary">Size uygun zaman</p><h2 id="appointment-cta-title" className="mt-3 text-3xl leading-tight sm:text-4xl">Randevunuzu Hemen Planlayın</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-muted">Hizmet, uzman, tarih ve saati tek ekranda seçerek randevunuzu kolayca oluşturun.</p></Reveal><Reveal direction="right" className="lg:pl-8"><button type="button" aria-expanded={open} aria-controls="home-appointment-form" onClick={()=>setOpen(value=>!value)} className="inline-flex w-full items-center justify-center rounded-full bg-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-sm transition-transform hover:-translate-y-0.5 hover:bg-[#765246] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary motion-reduce:transform-none sm:w-auto">{open?"Randevu Alanını Kapat ↑":"Randevu Oluştur ↓"}</button></Reveal></div><div id="home-appointment-form" aria-hidden={!open} className={`grid transition-[grid-template-rows,opacity] duration-500 ease-in-out motion-reduce:transition-none ${open?"grid-rows-[1fr] opacity-100":"grid-rows-[0fr] opacity-0"}`}><div className="min-h-0 overflow-hidden"><div className="mx-4 border-t border-primary/20 bg-[#fffaf4] px-2 sm:mx-8 sm:px-4 lg:mx-12">{open?<RoleGuard allowed={["customer","staff","admin","super_admin"]}><InlineAppointmentForm/></RoleGuard>:null}</div></div></div></div></section>}
+export function AppointmentCta() {
+  return <section aria-labelledby="appointment-cta-title" className="mx-auto max-w-[1240px] px-4 pb-8 pt-6 sm:px-6 sm:pb-10 lg:px-8">
+    <div className="overflow-hidden rounded-[1.75rem] border border-[#dfc4b8] bg-[#efd8cc] shadow-[0_16px_45px_rgba(91,64,53,.09)]">
+      <Reveal direction="left" className="px-5 pb-5 pt-7 sm:px-8 sm:pt-8 lg:px-10">
+        <p className="text-xs font-bold uppercase tracking-[.22em] text-primary">Size uygun zaman</p>
+        <h2 id="appointment-cta-title" className="mt-2 text-3xl leading-tight sm:text-4xl">Randevunuzu Hemen Planlayın</h2>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">Hizmet, uzman, tarih ve saati tek ekranda seçerek randevunuzu kolayca oluşturun.</p>
+      </Reveal>
+      <div id="home-appointment-form" className="mx-3 border-t border-primary/20 bg-[#fffaf4] px-3 sm:mx-6 sm:px-5 lg:mx-8 lg:px-6">
+        <RoleGuard allowed={["customer", "staff", "admin", "super_admin"]}>
+          <InlineAppointmentForm/>
+        </RoleGuard>
+      </div>
+    </div>
+  </section>;
+}
