@@ -12,7 +12,7 @@ export const workingHours = [
 ] as const;
 
 export const contactBranches = [
-  { name: "Lotus Merkez", address: "Lotus Mahallesi, No: 12, Şişli / İstanbul", phone: "+90 (212) 000 00 01", hours: "Pzt–Cmt 09.00–20.00", tone: "bg-[#e4c5b8]" },
-  { name: "Lotus Nişantaşı", address: "Teşvikiye Mahallesi, No: 24, Şişli / İstanbul", phone: "+90 (212) 000 00 02", hours: "Pzt–Cmt 09.00–20.00", tone: "bg-[#d9d1c4]" },
-  { name: "Lotus Kadıköy", address: "Caferağa Mahallesi, No: 18, Kadıköy / İstanbul", phone: "+90 (216) 000 00 03", hours: "Pzt–Paz 10.00–20.00", tone: "bg-[#ead5ca]" },
+  { name: "Belle Aura Merkez", address: "Lotus Mahallesi, No: 12, Şişli / İstanbul", phone: "+90 (212) 000 00 01", hours: "Pzt–Cmt 09.00–20.00", tone: "bg-[#e4c5b8]" },
+  { name: "Belle Aura Nişantaşı", address: "Teşvikiye Mahallesi, No: 24, Şişli / İstanbul", phone: "+90 (212) 000 00 02", hours: "Pzt–Cmt 09.00–20.00", tone: "bg-[#d9d1c4]" },
+  { name: "Belle Aura Kadıköy", address: "Caferağa Mahallesi, No: 18, Kadıköy / İstanbul", phone: "+90 (216) 000 00 03", hours: "Pzt–Paz 10.00–20.00", tone: "bg-[#ead5ca]" },
 ] as const;

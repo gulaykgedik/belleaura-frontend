@@ -26,7 +26,7 @@ export const blogPosts: readonly BlogPost[] = [
   },
   {
     slug: "bakim-randevusuna-hazirlik",
-    category: "Lotus Rehberi",
+    category: "Belle Aura Rehberi",
     title: "Bakım randevunuzdan önce bilmeniz gerekenler",
     excerpt: "Randevunuzdan en iyi deneyimi almanız için küçük ama etkili hazırlık önerileri.",
     publishedAt: "8 Ağustos 2026",

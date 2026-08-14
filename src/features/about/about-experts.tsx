@@ -31,7 +31,7 @@ export function AboutExperts() {
   }, []);
 
   return <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28" aria-labelledby="experts-title">
-    <SectionHeading eyebrow="Lotus ekibi" title="Uzmanlarımızla Tanışın" id="experts-title" text="Bilgisini, deneyimini ve kişisel yaklaşımını her randevuya taşıyan ekibimiz." />
+    <SectionHeading eyebrow="Belle Aura ekibi" title="Uzmanlarımızla Tanışın" id="experts-title" text="Bilgisini, deneyimini ve kişisel yaklaşımını her randevuya taşıyan ekibimiz." />
     <div className="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
       {experts.map((expert, index) => <article key={`${expert.id}-${index}`}>
         <div className={`grid aspect-[4/5] place-items-center overflow-hidden rounded-[7rem_7rem_1.5rem_1.5rem] ${["bg-[#e5c4bd]", "bg-[#ddd6c9]", "bg-[#ead2c5]", "bg-[#d8c9c1]"][index]}`}>
@@ -39,7 +39,7 @@ export function AboutExperts() {
         </div>
         <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-primary">{expert.service_name}</p>
         <h3 className="mt-2 text-2xl">{expert.name}</h3>
-        <p className="mt-3 text-sm leading-6 text-muted">{expert.bio || "Size özel bakım deneyimini özenle planlayan Lotus uzmanı."}</p>
+        <p className="mt-3 text-sm leading-6 text-muted">{expert.bio || "Size özel bakım deneyimini özenle planlayan Belle Aura uzmanı."}</p>
         <Link href="/appointments/new" className="mt-5 inline-flex border-b border-primary pb-1 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">Randevu Al →</Link>
       </article>)}
     </div>
