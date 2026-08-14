@@ -395,6 +395,7 @@ export function InlineAppointmentForm() {
     try {
       setCreated(
         await appointmentService.create({
+          branch_id: branch.id,
           service_id: service.id,
           staff_id: staffMember.id,
           date,
