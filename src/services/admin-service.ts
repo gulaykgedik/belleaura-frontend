@@ -28,9 +28,18 @@ export const adminService={
   notifications:(filters:object={})=>apiRequest<NotificationOverview>(`/admin/notifications${query(filters)}`),
   updateNotificationSettings:(body:Record<string,boolean>)=>apiRequest<Record<string,string>>("/admin/notifications/settings",{method:"PATCH",body}),
   staffServices:(id:number)=>apiRequest<AdminRecord[]>(`/staff/${id}/services`),
-  setStaffServices:(id:number,service_ids:number[])=>apiRequest<AdminRecord[]>(`/staff/${id}/services`,{method:"PUT",body:{service_ids}}),
+setStaffServices:(id:number,service_ids:number[])=>
+  apiRequest<AdminRecord[]>(`/staff/${id}/services`,{
+    method:"PATCH",
+    body:{service_ids}
+  }),
   workingHours:(id:number)=>apiRequest<AdminRecord[]>(`/staff/${id}/working-hours`),
-  setWorkingHours:(id:number,working_hours:object[])=>apiRequest<AdminRecord[]>(`/staff/${id}/working-hours`,{method:"PUT",body:{working_hours}}),
+ 
+setWorkingHours:(id:number,working_hours:object[])=>
+  apiRequest<AdminRecord[]>(`/staff/${id}/working-hours`,{
+    method:"PATCH",
+    body:{working_hours}
+  }),
   daysOff:(id:number)=>apiRequest<AdminPage<AdminRecord>>(`/staff/${id}/days-off`),
   addDayOff:(id:number,body:object)=>apiRequest<AdminRecord>(`/staff/${id}/days-off`,{method:"POST",body}),
   deleteDayOff:(staffId:number,id:number)=>apiRequest<{id:number}>(`/staff/${staffId}/days-off/${id}`,{method:"DELETE"}),
