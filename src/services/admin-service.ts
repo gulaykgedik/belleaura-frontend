@@ -4,6 +4,7 @@ import type {
   AdminRecord,
   AdminSettings,
   NotificationOverview,
+  RevenueSummary,
 } from "@/types/admin";
 import type { Appointment } from "@/types/appointment";
 import type { Order, Payment } from "@/types/commerce";
@@ -54,11 +55,11 @@ export const adminService = {
   appointment: (id: number) =>
     apiRequest<Appointment>(`/admin/appointments/${id}`),
 
-  appointmentStatus: (id: number, status: string) =>
-    apiRequest<Appointment>(`/admin/appointments/${id}/status`, {
-      method: "PATCH",
-      body: { status },
-    }),
+ appointmentStatus: (id: number, status: string) =>
+  apiRequest<Appointment>(`/admin/appointments/${id}/status`, {
+    method: "POST",
+    body: { status },
+  }),
 
   appointmentCancel: (id: number, reason: string) =>
     apiRequest<Appointment>(`/admin/appointments/${id}/cancel`, {
@@ -115,6 +116,9 @@ export const adminService = {
 
   payment: (id: number) =>
     apiRequest<Payment>(`/admin/payments/${id}`),
+
+  revenue: (filters: { date_from?: string; date_to?: string } = {}) =>
+    apiRequest<RevenueSummary>(`/admin/revenue${query(filters)}`),
 
   settings: () =>
     apiRequest<AdminSettings>("/admin/settings"),
