@@ -119,11 +119,11 @@ export const adminService = {
   settings: () =>
     apiRequest<AdminSettings>("/admin/settings"),
 
-  updateSettings: (body: AdminSettings) =>
-    apiRequest<AdminSettings>("/admin/settings", {
-      method: "PATCH",
-      body,
-    }),
+ updateSettings: (body: AdminSettings) =>
+  apiRequest<AdminSettings>("/admin/settings", {
+    method: "POST",
+    body,
+  }),
 
   notifications: (filters: object = {}) =>
     apiRequest<NotificationOverview>(
