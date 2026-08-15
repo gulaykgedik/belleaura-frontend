@@ -114,7 +114,7 @@ export const appointmentService = {
     apiRequest<Appointment>(
       `/appointments/${id}/reschedule`,
       {
-        method: "PATCH",
+        method: "POST",
         body: payload,
       }
     ),
