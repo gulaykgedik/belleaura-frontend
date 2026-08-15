@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -9,17 +10,21 @@ import type { Cart } from "@/types/commerce";
 import { appointmentService } from "@/services/appointment-service";
 import type { ServiceItem } from "@/types/appointment";
 import { categoryFor, serviceCategories, serviceCategorySlugs, type ServiceCategory } from "@/features/services/service-ui";
+import { settingsService } from "@/services/settings-service";
+import type { AdminSettings } from "@/types/admin";
 
 const navigation = [["Ana Sayfa","/"],["Hakkımızda","/about"],["Hizmetler","/services"],["Paketler","/packages"],["Ürünler","/products"],["Kampanyalar","/campaigns"],["Blog","/blog"],["İletişim","/contact"]] as const;
 
 export function SiteNavbar(){
-  const [open,setOpen]=useState(false);const [cartCount,setCartCount]=useState(0);const [services,setServices]=useState<ServiceItem[]>([]);const {user,hydrated,logout}=useAuth();const router=useRouter();const pathname=usePathname();
+  const [open,setOpen]=useState(false);const [cartCount,setCartCount]=useState(0);const [services,setServices]=useState<ServiceItem[]>([]);const [settings,setSettings]=useState<AdminSettings|null>(null);const [logoFailed,setLogoFailed]=useState(false);const {user,hydrated,logout}=useAuth();const router=useRouter();const pathname=usePathname();
   useEffect(()=>{let active=true;appointmentService.services().then((page)=>{if(active)setServices(page.items);}).catch(()=>{});return()=>{active=false;};},[]);
+  useEffect(()=>{let active=true;settingsService.public().then((value)=>{if(active){setSettings(value);setLogoFailed(false);}}).catch(()=>{});return()=>{active=false;};},[]);
   useEffect(()=>{if(user?.role_slug!=="customer")return;let active=true;const update=(cart:Cart)=>{if(active)setCartCount(cart.items.reduce((sum,item)=>sum+item.quantity,0));};commerceService.cart().then(update).catch(()=>{});const listener=(event:Event)=>update((event as CustomEvent<Cart>).detail);window.addEventListener("cart:updated",listener);return()=>{active=false;window.removeEventListener("cart:updated",listener);};},[user]);
   async function signOut(){await logout();setCartCount(0);setOpen(false);router.replace("/");router.refresh();}
   const panel=user?.role_slug==="admin"||user?.role_slug==="super_admin"?{href:"/admin",label:"Admin Panel"}:user?.role_slug==="staff"?{href:"/staff",label:"Personel Paneli"}:null;
+  const businessName=settings?.business_name?.trim()||"Belle Aura Beauty";const logoUrl=validHttpUrl(settings?.logo_url)?settings!.logo_url.trim():"";const businessInitial=businessName.charAt(0).toLocaleUpperCase("tr-TR")||"B";
   return <header className="sticky top-0 z-40 border-b bg-card/90 backdrop-blur-xl"><TopContactBar/><nav className="mx-auto flex min-h-24 max-w-[1440px] flex-wrap items-center justify-between gap-4 px-5 sm:px-8 lg:px-10 xl:px-12">
-    <Link href="/" className="flex shrink-0 items-center gap-3" onClick={()=>setOpen(false)}><span className="grid size-11 place-items-center rounded-full border border-primary font-serif text-xl text-primary">L</span><span className="font-serif text-[1.35rem]">Belle Aura Beauty</span></Link>
+    <Link href="/" className="flex shrink-0 items-center gap-3" onClick={()=>setOpen(false)}><span className="grid size-11 place-items-center overflow-hidden rounded-full border border-primary font-serif text-xl text-primary">{logoUrl&&!logoFailed?<img src={logoUrl} alt={`${businessName} logosu`} className="size-full object-cover" onError={()=>setLogoFailed(true)}/>:businessInitial}</span><span className="font-serif text-[1.35rem]">{businessName}</span></Link>
     <div className="hidden items-center gap-1 lg:flex xl:gap-2">{navigation.map(([label,href])=>{const active=isActivePath(pathname,href);return label==="Hizmetler"?<DesktopServicesMenu key={`${href}:${pathname}`} services={services} active={active}/>:<Link key={href} href={href} aria-current={active?"page":undefined} className={navLinkClass(active)}>{label}</Link>;})}</div>
     <div className="hidden shrink-0 items-center gap-2 lg:flex"><CartLink count={cartCount}/>{!hydrated?<AuthPlaceholder/>:user?<UserMenu name={user.name||user.email||"Kullanıcı"} panel={panel} signOut={signOut}/>:<GuestActions/>}</div>
     <div className="flex items-center gap-2 lg:hidden"><CartLink count={cartCount}/><button type="button" onClick={()=>setOpen(!open)} className="rounded-full border px-3.5 py-2 text-sm" aria-expanded={open} aria-controls="mobile-site-menu">Menü</button></div>
@@ -50,6 +55,8 @@ function isActivePath(pathname:string,href:string){
   if(href==="/blog")return pathname==="/blog"||pathname.startsWith("/blog/");
   return pathname===href;
 }
+
+function validHttpUrl(value:string|undefined){if(!value)return false;try{const url=new URL(value);return url.protocol==="http:"||url.protocol==="https:";}catch{return false;}}
 
 function TopContactBar(){return <div className="border-b border-primary/10 bg-[#f8f3ef]"><div className="mx-auto flex min-h-11 max-w-[1440px] items-center justify-between gap-4 px-5 sm:px-8 lg:px-10 xl:px-12"><div className="flex min-w-0 items-center gap-4 text-[11px] text-muted sm:gap-5 lg:gap-7"><span className="hidden items-center gap-1.5 md:flex"><PinIcon/>İstanbul</span><a href="tel:+902120000000" className="flex shrink-0 items-center gap-1.5 transition-colors duration-200 hover:text-primary focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"><PhoneIcon/><span className="sm:hidden">Ara</span><span className="hidden sm:inline">+90 (212) 000 00 00</span></a><a href="mailto:info@lotusguzellik.com" className="hidden items-center gap-1.5 transition-colors duration-200 hover:text-primary focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary md:flex"><MailIcon/>info@lotusguzellik.com</a><span className="flex shrink-0 items-center gap-1.5"><ClockIcon/><span className="sm:hidden">09:00–19:00</span><span className="hidden sm:inline">Pzt - Cmt: 09:00 - 19:00</span></span></div><div className="hidden shrink-0 items-center gap-1.5 md:flex" aria-label="Sosyal medya"><SocialButton label="Instagram"><InstagramIcon/></SocialButton><SocialButton label="Facebook"><FacebookIcon/></SocialButton><SocialButton label="YouTube"><YoutubeIcon/></SocialButton></div></div></div>}
 

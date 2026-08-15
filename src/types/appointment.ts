@@ -40,7 +40,7 @@ export interface Appointment {
   staff_profile_id: number;
   service_id: number;
 
-  branch_id?: number | null;
+  branch_id: number | null;
   branch_name?: string | null;
 
   start_at: string;
