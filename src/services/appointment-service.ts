@@ -126,7 +126,7 @@ export const appointmentService = {
     apiRequest<Appointment>(
       `/appointments/${id}/cancel`,
       {
-        method: "PATCH",
+        method: "POST",
         body: {
           cancellation_reason: reason,
         },
