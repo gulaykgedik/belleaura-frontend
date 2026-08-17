@@ -109,6 +109,19 @@ export const adminService = {
       }
     ),
 
+  updateOrderShipping: (
+    id: number,
+    body: {
+      shipping_company: string;
+      tracking_number: string;
+      tracking_url: string;
+    }
+  ) =>
+    apiRequest<Order>(`/admin/orders/${id}/shipping`, {
+      method: "POST",
+      body,
+    }),
+
   payments: (filters: object) =>
     apiRequest<AdminPage<Payment>>(
       `/admin/payments${query(filters)}`
