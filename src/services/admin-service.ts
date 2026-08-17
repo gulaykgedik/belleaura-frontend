@@ -5,6 +5,7 @@ import type {
   AdminSettings,
   NotificationOverview,
   RevenueSummary,
+  ServiceCategory,
 } from "@/types/admin";
 import type { Appointment } from "@/types/appointment";
 import type { Order, Payment } from "@/types/commerce";
@@ -36,9 +37,24 @@ export const adminService = {
       body,
     }),
 
-  update: <T = AdminRecord>(path: string, id: number, body: object) =>
+  update: <T = AdminRecord>(
+    path: string,
+    id: number,
+    body: object
+  ) =>
     apiRequest<T>(`${path}/${id}`, {
       method: "PATCH",
+      body,
+    }),
+
+  // Hizmet güncelleme:
+  // LiteSpeed PATCH isteklerini engellediği için POST kullanıyoruz.
+  updateService: <T = AdminRecord>(
+    id: number,
+    body: object
+  ) =>
+    apiRequest<T>(`/services/${id}`, {
+      method: "POST",
       body,
     }),
 
@@ -47,49 +63,110 @@ export const adminService = {
       method: "DELETE",
     }),
 
+  serviceCategories: (filters: object = {}) =>
+    apiRequest<AdminPage<ServiceCategory>>(
+      `/admin/service-categories${query(filters)}`
+    ),
+
+  serviceCategory: (id: number) =>
+    apiRequest<ServiceCategory>(`/admin/service-categories/${id}`),
+
+  createServiceCategory: (body: object) =>
+    apiRequest<ServiceCategory>("/admin/service-categories", {
+      method: "POST",
+      body,
+    }),
+
+  updateServiceCategory: (id: number, body: object) =>
+    apiRequest<ServiceCategory>(`/admin/service-categories/${id}`, {
+      method: "POST",
+      body,
+    }),
+
+  deleteServiceCategory: (id: number) =>
+    apiRequest<{ id: number }>(`/admin/service-categories/${id}/delete`, {
+      method: "POST",
+      body: {},
+    }),
+
   appointments: (filters: object) =>
     apiRequest<AdminPage<Appointment>>(
       `/admin/appointments${query(filters)}`
     ),
 
   appointment: (id: number) =>
-    apiRequest<Appointment>(`/admin/appointments/${id}`),
+    apiRequest<Appointment>(
+      `/admin/appointments/${id}`
+    ),
 
- appointmentStatus: (id: number, status: string) =>
-  apiRequest<Appointment>(`/admin/appointments/${id}/status`, {
-    method: "POST",
-    body: { status },
-  }),
+  appointmentStatus: (
+    id: number,
+    status: string
+  ) =>
+    apiRequest<Appointment>(
+      `/admin/appointments/${id}/status`,
+      {
+        method: "POST",
+        body: { status },
+      }
+    ),
 
-  appointmentCancel: (id: number, reason: string) =>
-    apiRequest<Appointment>(`/admin/appointments/${id}/cancel`, {
-      method: "PATCH",
-      body: { cancellation_reason: reason },
-    }),
+  appointmentCancel: (
+    id: number,
+    reason: string
+  ) =>
+    apiRequest<Appointment>(
+      `/admin/appointments/${id}/cancel`,
+      {
+        method: "PATCH",
+        body: {
+          cancellation_reason: reason,
+        },
+      }
+    ),
 
-  appointmentReschedule: (id: number, body: object) =>
-    apiRequest<Appointment>(`/admin/appointments/${id}/reschedule`, {
-      method: "PATCH",
-      body,
-    }),
+  appointmentReschedule: (
+    id: number,
+    body: object
+  ) =>
+    apiRequest<Appointment>(
+      `/admin/appointments/${id}/reschedule`,
+      {
+        method: "PATCH",
+        body,
+      }
+    ),
 
   orders: (filters: object) =>
-    apiRequest<AdminPage<Order>>(`/admin/orders${query(filters)}`),
+    apiRequest<AdminPage<Order>>(
+      `/admin/orders${query(filters)}`
+    ),
 
   order: (id: number) =>
-    apiRequest<Order>(`/admin/orders/${id}`),
+    apiRequest<Order>(
+      `/admin/orders/${id}`
+    ),
 
-  orderStatus: (id: number, status: string) =>
-    apiRequest<Order>(`/admin/orders/${id}/status`, {
-      method: "PATCH",
-      body: { status },
-    }),
+  orderStatus: (
+    id: number,
+    status: string
+  ) =>
+    apiRequest<Order>(
+      `/admin/orders/${id}/status`,
+      {
+        method: "PATCH",
+        body: { status },
+      }
+    ),
 
   orderCancel: (id: number) =>
-    apiRequest<Order>(`/admin/orders/${id}/cancel`, {
-      method: "PATCH",
-      body: {},
-    }),
+    apiRequest<Order>(
+      `/admin/orders/${id}/cancel`,
+      {
+        method: "PATCH",
+        body: {},
+      }
+    ),
 
   confirmBankTransfer: (id: number) =>
     apiRequest<Order>(
@@ -117,10 +194,13 @@ export const adminService = {
       tracking_url: string;
     }
   ) =>
-    apiRequest<Order>(`/admin/orders/${id}/shipping`, {
-      method: "POST",
-      body,
-    }),
+    apiRequest<Order>(
+      `/admin/orders/${id}/shipping`,
+      {
+        method: "POST",
+        body,
+      }
+    ),
 
   payments: (filters: object) =>
     apiRequest<AdminPage<Payment>>(
@@ -128,21 +208,39 @@ export const adminService = {
     ),
 
   payment: (id: number) =>
-    apiRequest<Payment>(`/admin/payments/${id}`),
+    apiRequest<Payment>(
+      `/admin/payments/${id}`
+    ),
 
-  revenue: (filters: { date_from?: string; date_to?: string } = {}) =>
-    apiRequest<RevenueSummary>(`/admin/revenue${query(filters)}`),
+  revenue: (
+    filters: {
+      date_from?: string;
+      date_to?: string;
+    } = {}
+  ) =>
+    apiRequest<RevenueSummary>(
+      `/admin/revenue${query(filters)}`
+    ),
 
   settings: () =>
-    apiRequest<AdminSettings>("/admin/settings"),
+    apiRequest<AdminSettings>(
+      "/admin/settings"
+    ),
 
- updateSettings: (body: AdminSettings) =>
-  apiRequest<AdminSettings>("/admin/settings", {
-    method: "POST",
-    body,
-  }),
+  updateSettings: (
+    body: AdminSettings
+  ) =>
+    apiRequest<AdminSettings>(
+      "/admin/settings",
+      {
+        method: "POST",
+        body,
+      }
+    ),
 
-  notifications: (filters: object = {}) =>
+  notifications: (
+    filters: object = {}
+  ) =>
     apiRequest<NotificationOverview>(
       `/admin/notifications${query(filters)}`
     ),
@@ -171,7 +269,9 @@ export const adminService = {
       `/staff/${id}/services`,
       {
         method: "POST",
-        body: { service_ids },
+        body: {
+          service_ids,
+        },
       }
     ),
 
@@ -188,7 +288,9 @@ export const adminService = {
       `/staff/${id}/working-hours`,
       {
         method: "POST",
-        body: { working_hours },
+        body: {
+          working_hours,
+        },
       }
     ),
 
@@ -197,7 +299,10 @@ export const adminService = {
       `/staff/${id}/days-off`
     ),
 
-  addDayOff: (id: number, body: object) =>
+  addDayOff: (
+    id: number,
+    body: object
+  ) =>
     apiRequest<AdminRecord>(
       `/staff/${id}/days-off`,
       {

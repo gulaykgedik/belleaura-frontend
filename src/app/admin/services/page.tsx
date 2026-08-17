@@ -1,3 +1,5 @@
-"use client";
-import { ResourceManager,type ResourceConfig } from "@/features/admin/resource-manager";
-const config:ResourceConfig={title:"Hizmetler",description:"Randevu hizmetlerini, sürelerini ve fiyatlarını yönetin.",listPath:"/admin/services",mutatePath:"/services",canCreate:true,canEdit:true,canDelete:true,defaults:{is_active:true,duration_minutes:30,price:0},fields:[{key:"name",label:"Hizmet adı",required:true},{key:"slug",label:"Slug"},{key:"price",label:"Fiyat",type:"number",step:"0.01",required:true},{key:"duration_minutes",label:"Süre (dakika)",type:"number",required:true},{key:"description",label:"Açıklama",type:"textarea"},{key:"is_active",label:"Aktif",type:"checkbox"}],columns:[{key:"name",label:"Hizmet"},{key:"price",label:"Fiyat"},{key:"duration_minutes",label:"Süre"},{key:"is_active",label:"Aktif"}],filters:[{key:"is_active",label:"Aktiflik",options:[{label:"Aktif",value:"1"},{label:"Pasif",value:"0"}]}]};export default function ServicesPage(){return <ResourceManager config={config}/>}
+import { ServiceAdmin } from "@/features/admin/service-admin";
+
+export default function ServicesPage() {
+  return <ServiceAdmin />;
+}
